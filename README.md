@@ -1,19 +1,28 @@
-# uGet Chrome Wrapper
-Integrate the famous FOSS uGet Download Manager with Google Chrome in Linux systems. With this tool, uGet can interrupt and catch your downloads from Google Chrome.
+# uGet Extension
 
-For more details, visit the official page: [uGet Chrome Wrapper](https://slgobinath.github.io/uget-chrome-wrapper/)
+Integrate the uGet Download Manager with Google Chrome, Chromium, Vivaldi, Opera and Mozilla Firefox.
 
-## Installation
+## How to install
 
-To see how to install, visit the [installation guide](https://slgobinath.github.io/uget-chrome-wrapper/#installation) and click on your operating system.
+1. Install the latest version of [uGet Download Manager](http://ugetdm.com/)
+2. Install the latest version of [uget-integrator](https://github.com/ugetdm/uget-integrator)
+3. Install the `uGet Integration` extension.
+    - Google Chrome, Chromium and Vivaldi: [Chrome Extension](https://chrome.google.com/webstore/detail/uget-integration/efjgjleilhflffpbnkaofpmdnajdpepi)
+    - Opera: [Opera Addon](https://addons.opera.com/en/extensions/details/uget-integration)
+    - Mozilla Firefox 56+: [Firefox Addon](https://addons.mozilla.org/en-US/firefox/addon/ugetintegration/)
 
-## Usage
-Simply click on any downloadable links to download the file. 'uGet new Download' dialog will appear and continue the download.
+## How to use
 
-To disable uGet from interrupting your download, press <kbd>Insert</kbd> key and click on the link. <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>U</kbd> can be used to disable the extension for a longer period. The same shortcut can enable the extension again.
+Just click on any downloadable links to download the file. 'uGet new Download' dialog will appear and continue the download. You can also right click on a link and select `Download with uGet`.
 
-## Known Problems
+To download all links, right click on the web page and select `Download all links with uGet`. In Youtube, you will get an additional menu item `Download media with uGet` to download video.
+
+Use <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>U</kbd> to toggle interruption.
+
+## Known Issues
+
 ### Firefox not interrupting downloads (Issue [#43](https://github.com/slgobinath/uget-chrome-wrapper/issues/43))
+
 If Firefox does not interrupt the downloads but `Download with uGet` works, delete the `handlers.json` from the following path.
 
 ```
@@ -21,29 +30,6 @@ If Firefox does not interrupt the downloads but `Download with uGet` works, dele
 ```
 
 You may have a different folder name instead of `mwad0hks.default`. Firefox Nightly users may have `firefox-trunk` folder instead of `firefox`.
-
-### uGet does not capture the downloads in Windows (Issue [#43](https://github.com/slgobinath/uget-chrome-wrapper/issues/43))
-
-Ensure that `uget` directory is directly under the `C:\` drive and the `C:\uget\bin` directory is added to the environment variable `PATH`. Also start uGet manually (recommended to add to the system startup) before downloading any files.
-
-
-## Contributing
-**Are you a user?**
-
-Please test uget-chrome-wrapper on your system and report any issues [here](https://github.com/slgobinath/uget-chrome-wrapper/issues)
-
-**Are you a developer?**
-
-1. Fork it!
-2. Create your feature branch: `git checkout -b my-new-feature`
-3. Commit your changes: `git commit -am 'Add some feature'`
-4. Push to the branch: `git push origin my-new-feature`
-5. Submit a pull request
-
-**Are you using a different operating system?**
-
-Please test uget-chrome-wrapper and create installers for your operating system
-
 
 ## License
 

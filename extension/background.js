@@ -79,7 +79,7 @@ function initialize() {
     }
     try {
         current_browser = browser;
-        hostName = 'com.javahelps.ugetfirefoxwrapper';
+        hostName = 'com.ugetdm.firefox';
         current_browser.runtime.getBrowserInfo().then(
             function(info) {
                 if (info.name === 'Firefox') {
@@ -91,7 +91,7 @@ function initialize() {
     } catch (ex) {
         firefoxVersion = 0;
         current_browser = chrome;
-        hostName = 'com.javahelps.ugetchromewrapper';
+        hostName = 'com.ugetdm.chrome';
     }
     // Set keyboard shortcut listener
     current_browser.commands.onCommand.addListener(function(command) {

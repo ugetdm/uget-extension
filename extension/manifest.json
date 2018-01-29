@@ -27,7 +27,7 @@
         }
     },
     "description": "uGet Browser Integration extension replaces default download manager by uGet Download Manager.",
-    "homepage_url": "https://slgobinath.github.io/uget-chrome-wrapper",
+    "homepage_url": "http://ugetdm.com/",
     "icons": {
         "32": "icon_32.png",
         "48": "icon_48.png",

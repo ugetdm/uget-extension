@@ -1,9 +1,0 @@
-{
-    "name": "com.javahelps.ugetfirefoxwrapper",
-    "description": "Integrate uGet with Mozilla Firefox",
-    "path": "/usr/bin/uget-chrome-wrapper",
-    "type": "stdio",
-    "allowed_extensions": [
-        "uget-integration@slgobinath"
-    ]
-}
