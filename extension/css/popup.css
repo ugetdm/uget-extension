@@ -1,0 +1,204 @@
+/*
+* uget-chrome-wrapper is an extension to integrate uGet Download manager
+* with Google Chrome, Chromium, Vivaldi and Opera in Linux and Windows.
+*
+* Copyright (C) 2016  Gobinath
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
+body {
+    overflow-x: hidden;
+    padding: 10px;
+    min-width: 450px;
+}
+
+#parent-container {
+    display: table;
+    text-align: center;
+    margin: 0 auto;
+}
+
+.col {
+    vertical-align: center;
+}
+
+.col-right {
+    text-align: right;
+    padding-right: 5px;
+}
+
+.col-left {
+    text-align: left;
+    padding-left: 5px;
+}
+
+.vcenter {
+    display: flex;
+    align-items: center;
+}
+
+#title {
+    display: table-cell;
+    vertical-align: middle;
+    font-weight: bold;
+    font-size: 11pt;
+    padding-left: 5px;
+    color: #474747;
+}
+
+#info {
+    display: table;
+    text-align: center;
+    margin: 0 auto;
+    line-height: 50%;
+    color: green;
+}
+
+#warn {
+    display: table;
+    text-align: center;
+    margin: 0 auto;
+    line-height: 50%;
+    color: orange;
+}
+
+#error {
+    display: table;
+    text-align: center;
+    margin: 0 auto;
+    line-height: 50%;
+    color: red;
+}
+
+hr {
+    display: block;
+    height: 1px;
+    border: 0;
+    border-top: 0.2px solid #ccc;
+    margin: 10px;
+    padding: 0;
+}
+
+.row {
+    margin-bottom: 10px;
+}
+
+.form-control {
+    padding: .15rem .75rem;
+}
+
+
+/* The switch - the box around the slider */
+
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 48px;
+    height: 24px;
+    display: table-cell;
+    vertical-align: middle;
+    font-weight: bold;
+    font-size: 11pt;
+    color: #474747;
+    margin: 0px !important;
+}
+
+
+/* Hide default HTML checkbox */
+
+.switch input {
+    display: none;
+}
+
+
+/* The slider */
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    -webkit-transition: .4s;
+    transition: .4s;
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 22px;
+    width: 22px;
+    left: 1px;
+    bottom: 1px;
+    background-color: white;
+    -webkit-transition: .4s;
+    transition: .4s;
+}
+
+input:checked+.slider {
+    background-color: #78b801;
+}
+
+input:focus+.slider {
+    box-shadow: 0 0 1px #84ca00;
+}
+
+input:checked+.slider:before {
+    -webkit-transform: translateX(24px);
+    -ms-transform: translateX(24px);
+    transform: translateX(24px);
+}
+
+
+/* Rounded sliders */
+
+.slider.round {
+    border-radius: 22px;
+}
+
+.slider.round:before {
+    border-radius: 50%;
+}
+
+#footer {
+    display: table;
+    text-align: center;
+    margin: 0 auto;
+    line-height: 50%;
+    color: #aaa;
+    font-size: 10pt;
+}
+
+.form-control::-webkit-input-placeholder {
+    color: rgb(179, 179, 179);
+}
+
+.form-control:-moz-placeholder {
+    color: rgb(179, 179, 179);
+}
+
+.form-control::-moz-placeholder {
+    color: rgb(179, 179, 179);
+}
+
+.form-control:-ms-input-placeholder {
+    color: rgb(179, 179, 179);
+}
+
+.form-control::-ms-input-placeholder {
+    color: rgb(179, 179, 179);
+}

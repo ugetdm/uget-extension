@@ -21,47 +21,57 @@
 
 <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <script src="js/jquery.min.js"></script>
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="css/popup.css">
+    <script src="js/bootstrap.min.js"></script>
     <script src="popup.js"></script>
-    <link rel="stylesheet" type="text/css" href="popup.css">
 </head>
 
 <body>
-    <div id="parent-container">
-        <div id="title-container">
-            <img id="img-icon" src="icon_32.png" /> <span>uGet Integration 2.1.1</span>
+    <div class="container">
+        <div class="row">
+            <div class="col-4 col-right"><img id="img-icon" src="icon_32.png" /></div>
+            <div class="col vcenter"><span id="title">uGet Integration 2.1.1</span></div>
         </div>
         <hr>
-        <label id="info">Info: Found uGet and uget-chrome-wrapper</label><label id="error">Error: Unable to connect to the uget-chrome-wrapper</label><label id="warn">Warning: Please upgrade uget-chrome-wrapper to the latest version</label>
+        <div class="row h-10">
+            <label id="info">Info: Found uGet and uget-integrator</label>
+            <label id="error">Error: Unable to connect with uget-integrator</label>
+            <label id="warn">Warning: Please upgrade uget-integrator to the latest version</label>
+        </div>
         <hr>
-        <div id="controls-container" class="inline">
-            <label id="label" title="Ctrl + Shift + U" for="switch">Interrupt downloads:&nbsp;</label>
-            <label id="label" class="switch">
-                <input id="chk-interrupt" type="checkbox" checked="false">
-                <div class="slider round"></div>
-            </label>
+        <div class="row">
+            <div class="col-5 vcenter">Interrupt downloads</div>
+            <div class="col-7 vcenter">
+                <!-- Rounded switch -->
+                <label class="switch vcenter">
+                    <input id="chk_enable" type="checkbox">
+                    <span class="slider round"></span>
+                </label>
+            </div>
         </div>
-        <br>
-        <div id="controls-container">
-            <label id="label" for="keywords">Don't interrupt URLs containing these keywords:</label>
-            <br>
-            <input title="Separate values by comma (Eg: github.com, .jpg)" type="text" id="keywordsToExclude" name="keywordsToExclude" size="50" value="" />
+        <div class="row">
+            <div class="col-5 vcenter">Minimum file size</div>
+            <div class="col-7 vcenter">
+                <input class="form-control" type="number" min="-1" title="Minimum file size (in KB) required to interrupt the download" type="text" id="fileSize" name="fileSize" />
+            </div>
         </div>
-        <div id="controls-container">
-            <label id="label" for="keywords">Minimum file size (in KB) required to interrupt the download:</label>
-            <br>
-            <input title="File size in KB" type="text" id="fileSize" name="fileSize" size="50" value="" />
+        <div class="row">
+            <div class="col-5 vcenter">Always interrupt</div>
+            <div class="col-7 vcenter">
+                <input class="form-control" title="Separate values by comma (Eg: github.com, .jpg)" type="text" id="keywordsToInclude" name="keywordsToInclude" placeholder="mp4, mp3" />
+            </div>
         </div>
-        <div id="controls-container">
-            <label id="label" for="keywords">Interrupt URLs containing these keywords, regardless of the file size:</label>
-            <br>
-            <input title="Separate values by comma (Eg: github.com, .jpg)" type="text" id="keywordsToInclude" name="keywordsToInclude" size="50" value="" />
+        <div class="row">
+            <div class="col-5 vcenter">Never interrupt</div>
+            <div class="col-7 vcenter">
+                <input class="form-control" title="Separate values by comma (Eg: github.com, .jpg)" type="text" id="keywordsToExclude" name="keywordsToExclude" placeholder="jpg, bmp, gif, github.com" />
+            </div>
         </div>
-        <div id="button-container">
-            <input type="button" value="Save" id="save" />
-        </div>
-        <br><br>
-        <label id="footer">For more details and installation guide, visit <a href="http://ugetdm.com/">ugetdm.com</a></label>
-    </div>
+        <row>
+            <label id="footer">For more details, visit <a href="http://ugetdm.com/">ugetdm.com</a></label>
+        </row>
 </body>
 
 </html>

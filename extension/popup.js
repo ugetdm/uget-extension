@@ -21,70 +21,74 @@
 var current_browser;
 
 try {
-	current_browser = browser;
-	current_browser.runtime.getBrowserInfo().then(
-		function(info) {
-			if (info.name === 'Firefox') {
-				// Do nothing
-			}
-		}
-	);
+    current_browser = browser;
+    current_browser.runtime.getBrowserInfo().then(
+        function(info) {
+            if (info.name === 'Firefox') {
+                // Do nothing
+            }
+        }
+    );
 } catch (ex) {
-	// Not Firefox
-	current_browser = chrome;
+    // Not Firefox
+    current_browser = chrome;
 }
 
-function saveChanges() {
-	var keywordsToExclude = document.getElementById("keywordsToExclude").value.trim();
-	var keywordsToInclude = document.getElementById("keywordsToInclude").value.trim();
-	var interrupt = document.getElementById('chk-interrupt').checked;
-	var minFileSize = parseInt(document.getElementById("fileSize").value) * 1024;
-	if (isNaN(minFileSize)) {
-		minFileSize = 300 * 1024;
-	} else if(minFileSize < 0) {
-		minFileSize = -1024;	// Which is -1 KB
-	}
+$(document).ready(function() {
+    // Show the system status
+    current_browser.runtime.getBackgroundPage(function(backgroundPage) {
+        var state = backgroundPage.getState();
+        if (state == 0) {
+            $('#info').css('display', 'block');
+            $('#warn').css('display', 'none');
+            $('#error').css('display', 'none');
+        } else if (state == 1) {
+            $('#info').css('display', 'none');
+            $('#warn').css('display', 'block');
+            $('#error').css('display', 'none');
+        } else {
+            $('#info').css('display', 'none');
+            $('#warn').css('display', 'none');
+            $('#error').css('display', 'block');
+        }
+    });
 
-	current_browser.runtime.getBackgroundPage(function(backgroundPage) {
-		backgroundPage.updateKeywords(keywordsToInclude, keywordsToExclude);
-		backgroundPage.setInterruptDownload(interrupt, true);
-		backgroundPage.updateMinFileSize(minFileSize);
-	});
+    current_browser.storage.sync.get(function(items) {
+        $('#keywordsToExclude').val(items["uget-keywords-exclude"]);
+        $('#keywordsToInclude').val(items["uget-keywords-include"]);
+        $('#fileSize').val(parseInt(items["uget-min-file-size"]) / 1024);
+        $('#chk_enable').prop('checked', items["uget-interrupt"] == "true");
+    });
 
-	window.close();
-}
-
-// When the popup HTML has loaded
-window.addEventListener('load', function(evt) {
-	// Show the system status
-	current_browser.runtime.getBackgroundPage(function(backgroundPage) {
-		var state = backgroundPage.getState();
-		if (state == 0) {
-			// document.getElementById('info').innerHTML = "Info: Found uGet and uget-chrome-wrapper";
-			document.getElementById('info').style.display = 'block';
-			document.getElementById('warn').style.display = 'none';
-			document.getElementById('error').style.display = 'none';
-			var element = document.getElementById("element-id");
-			element.parentNode.removeChild(element);
-		} else if (state == 1) {
-			// document.getElementById('warn').innerHTML = "Warning: Please update the uget-chrome-wrapper to the latest version";
-			document.getElementById('info').style.display = 'none';
-			document.getElementById('warn').style.display = 'block';
-			document.getElementById('error').style.display = 'none';
-		} else {
-			// document.getElementById('error').innerHTML = "Error: Unable to connect to the uget-chrome-wrapper";
-			document.getElementById('info').style.display = 'none';
-			document.getElementById('warn').style.display = 'none';
-			document.getElementById('error').style.display = 'block';
-		}
-	});
-
-	let interrupt = (current_browser.storage.sync["uget-interrupt"] == "true");
-	document.getElementById('save').addEventListener('click', saveChanges);
-	current_browser.storage.sync.get(function(items) {
-		document.getElementById('keywordsToExclude').value = items["uget-keywords-exclude"];
-		document.getElementById('keywordsToInclude').value = items["uget-keywords-include"];
-		document.getElementById('fileSize').value = parseInt(items["uget-min-file-size"]) / 1024;
-		document.getElementById('chk-interrupt').checked = items["uget-interrupt"] == "true";
-	});
+    // Set event listeners
+    $('#chk_enable').change(function() {
+        var enabled = this.checked;
+        current_browser.runtime.getBackgroundPage(function(backgroundPage) {
+            backgroundPage.setInterruptDownload(enabled, true);
+        });
+    });
+    $("#fileSize").on("change paste", function() {
+        var minFileSize = parseInt($(this).val());
+        if (isNaN(minFileSize)) {
+            minFileSize = 300;
+        } else if (minFileSize < -1) {
+            minFileSize = -1;
+        }
+        $('#fileSize').val(minFileSize);
+        current_browser.runtime.getBackgroundPage(function(backgroundPage) {
+            backgroundPage.updateMinFileSize(minFileSize * 1024);
+        });
+    });
+    $("#keywordsToExclude").on("change paste", function() {
+        var keywords = $(this).val().trim();
+        current_browser.runtime.getBackgroundPage(function(backgroundPage) {
+            backgroundPage.updateExcludeKeywords(keywords);
+        });
+    });
+    $("#keywordsToInclude").on("change paste", function() {
+        var keywords = $(this).val().trim();
+        current_browser.runtime.getBackgroundPage(function(backgroundPage) {
+            backgroundPage.updateIncludeKeywords(keywords);
+        });
+    });
 });

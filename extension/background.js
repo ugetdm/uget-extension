@@ -581,14 +581,21 @@ function parseCookies(cookies_arr) {
 }
 
 /**
- * Update the include & exclude keywords.
+ * Update the exclude keywords.
  * Is called from the popup.js.
  */
-function updateKeywords(include, exclude) {
-    keywordsToInclude = include.split(/[\s,]+/);
+function updateExcludeKeywords(exclude) {
     keywordsToExclude = exclude.split(/[\s,]+/);
-    current_browser.storage.sync.set({ "uget-keywords-include": include });
     current_browser.storage.sync.set({ "uget-keywords-exclude": exclude });
+}
+
+/**
+ * Update the include keywords.
+ * Is called from the popup.js.
+ */
+function updateIncludeKeywords(include) {
+    keywordsToInclude = include.split(/[\s,]+/);
+    current_browser.storage.sync.set({ "uget-keywords-include": include });
 }
 
 /**
