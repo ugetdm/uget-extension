@@ -1,6 +1,6 @@
 /*
- * uget-chrome-wrapper is an extension to integrate uGet Download manager
- * with Google Chrome, Chromium, Vivaldi and Opera in Linux and Windows.
+ * uGet Integration is an extension to integrate uGet Download manager
+ * with Google Chrome, Chromium, Vivaldi, Opera and Mozilla Firefox in Linux and Windows.
  *
  * Copyright (C) 2016  Gobinath
  *
@@ -19,12 +19,12 @@
  */
 
 var EXTENSION_VERSION = "2.1.1";
-var REQUIRED_WRAPPER_VERSION = "2.0.7";
+var REQUIRED_INTEGRATOR_VERSION = "2.0.7";
 var interruptDownloads = true;
-var ugetWrapperNotFound = true;
+var ugetIntegratorNotFound = true;
 var disposition = '';
 var hostName;
-var ugetChromeWrapperVersion;
+var ugetIntegratorVersion;
 var ugetVersion = '';
 var chromeVersion;
 var firefoxVersion;
@@ -219,7 +219,7 @@ function setDownloadHooks() {
     // Interrupt downloads on creation
     current_browser.downloads.onCreated.addListener(function(downloadItem) {
 
-        if (ugetWrapperNotFound || !interruptDownloads) { // uget-chrome-wrapper not installed
+        if (ugetIntegratorNotFound || !interruptDownloads) { // uget-integrator not installed
             return;
         }
 
@@ -307,7 +307,7 @@ function setDownloadHooks() {
     current_browser.webRequest.onHeadersReceived.addListener(function(details) {
 
 
-        if (ugetWrapperNotFound) { // uget-chrome-wrapper not installed
+        if (ugetIntegratorNotFound) { // uget-integrator not installed
             return {
                 responseHeaders: details.responseHeaders
             };
@@ -498,16 +498,17 @@ function enableVideoGrabber() {
 
 ////////////////// Utility Functions //////////////////
 /**
- * Send message to the uget-chrome-wrapper
+ * Send message to uget-integrator
  */
 function sendMessageToHost(message) {
     current_browser.runtime.sendNativeMessage(hostName, message, function(response) {
         clearMessage();
-        ugetWrapperNotFound = (response == null);
-        if (!ugetWrapperNotFound && !ugetChromeWrapperVersion) {
-            ugetChromeWrapperVersion = response.Version;
+        ugetIntegratorNotFound = (response == null);
+        if (!ugetIntegratorNotFound && !ugetIntegratorVersion) {
+            ugetIntegratorVersion = response.Version;
             ugetVersion = response.Uget;
         }
+        changeIcon();
     });
 }
 
@@ -515,9 +516,9 @@ function sendMessageToHost(message) {
  * Return the internal state.
  */
 function getState() {
-    if (ugetWrapperNotFound || !ugetChromeWrapperVersion) {
+    if (ugetIntegratorNotFound || !ugetIntegratorVersion) {
         return 2;
-    } else if (!ugetChromeWrapperVersion.startsWith(REQUIRED_WRAPPER_VERSION)) {
+    } else if (!ugetIntegratorVersion.startsWith(REQUIRED_INTEGRATOR_VERSION)) {
         return 1;
     } else {
         return 0;
@@ -645,18 +646,30 @@ function isWhiteListed(url) {
  */
 function setInterruptDownload(interrupt, writeToStorage) {
     interruptDownloads = interrupt;
-    if (interrupt) {
-        current_browser.browserAction.setIcon({
-            path: "./icon_32.png"
-        });
-    } else {
-        current_browser.browserAction.setIcon({
-            path: "./icon_disabled_32.png"
-        });
-    }
     if (writeToStorage) {
         current_browser.storage.sync.set({ "uget-interrupt": interrupt.toString() });
     }
+    changeIcon();
+}
+
+/**
+ * Change extension icon based on current state.
+ */
+function changeIcon() {
+    state = getState();
+    iconPath = "./icon_32.png";
+    if (state == 0 && !interruptDownloads) {
+        iconPath = "./icon_disabled_32.png";
+    } else if (state == 1) {
+        // Warning
+        iconPath = "./icon_warning_32.png";
+    } else if (state == 2) {
+        // Error
+        iconPath = "./icon_error_32.png";
+    }
+    current_browser.browserAction.setIcon({
+        path: iconPath
+    });
 }
 
 start();

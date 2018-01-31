@@ -19,6 +19,15 @@ To download all links, right click on the web page and select `Download all link
 
 Use <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>U</kbd> to toggle interruption.
 
+### Extension status signals
+
+uGet Integration extension requires [uget-integrator](https://github.com/ugetdm/uget-integrator) to integrate [uGet Download Manager](http://ugetdm.com/) with your browser. The extension indicates any connection issues using the following signals.
+
+ - Green icon (<img src="https://github.com/ugetdm/uget-extension/raw/master/extension/icon_32.png" width="16px">) with a message: `Info: Found uGet and uget-integrator` means everything works as intended
+ - Grey icon (<img src="https://github.com/ugetdm/uget-extension/raw/master/extension/icon_disabled_32.png" width="16px">) with a message: `Info: Found uGet and uget-integrator` means everything works as intended but for the moment uGet Extension is disabled. You can enable it either using the switch in the popup dialog of the extension or using <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>U</kbd> shortcut
+ - Yellow icon (<img src="https://github.com/ugetdm/uget-extension/raw/master/extension/icon_warning_32.png" width="16px">) with a message: `Warning: Please upgrade uget-integrator to the latest version` means the version of [uget-integrator](https://github.com/ugetdm/uget-integrator) does not match with the expected version. You can fix it by installing the latest `uget-integrator`
+ - Red icon (<img src="https://github.com/ugetdm/uget-extension/raw/master/extension/icon_error_32.png" width="16px">) with a message: `Error: Unable to connect with uget-integrator` means either you have not installed [uGet Download Manager](http://ugetdm.com/) and/or [uget-integrator](https://github.com/ugetdm/uget-integrator) or the `uget-integrator` is not detected by the extension. In the later scenario, please check the known issues and if you could not solve the problem, please open a new [issue](https://github.com/ugetdm/uget-extension/issues)
+
 ## Known Issues
 
 ### Firefox not interrupting downloads (Issue [#43](https://github.com/slgobinath/uget-chrome-wrapper/issues/43))
