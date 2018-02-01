@@ -54,8 +54,10 @@ $(document).ready(function() {
     });
 
     current_browser.storage.sync.get(function(items) {
-        $('#keywordsToExclude').val(items["uget-keywords-exclude"]);
-        $('#keywordsToInclude').val(items["uget-keywords-include"]);
+        $('#urlsToExclude').val(items["uget-urls-exclude"]);
+        $('#urlsToInclude').val(items["uget-urls-include"]);
+        $('#mimeToExclude').val(items["uget-mime-exclude"]);
+        $('#mimeToInclude').val(items["uget-mime-include"]);
         $('#fileSize').val(parseInt(items["uget-min-file-size"]) / 1024);
         $('#chk_enable').prop('checked', items["uget-interrupt"] == "true");
     });
@@ -79,16 +81,28 @@ $(document).ready(function() {
             backgroundPage.updateMinFileSize(minFileSize * 1024);
         });
     });
-    $("#keywordsToExclude").on("change paste", function() {
+    $("#urlsToExclude").on("change paste", function() {
         var keywords = $(this).val().trim();
         current_browser.runtime.getBackgroundPage(function(backgroundPage) {
             backgroundPage.updateExcludeKeywords(keywords);
         });
     });
-    $("#keywordsToInclude").on("change paste", function() {
+    $("#urlsToInclude").on("change paste", function() {
         var keywords = $(this).val().trim();
         current_browser.runtime.getBackgroundPage(function(backgroundPage) {
             backgroundPage.updateIncludeKeywords(keywords);
+        });
+    });
+    $("#mimeToExclude").on("change paste", function() {
+        var keywords = $(this).val().trim();
+        current_browser.runtime.getBackgroundPage(function(backgroundPage) {
+            backgroundPage.updateExcludeMIMEs(keywords);
+        });
+    });
+    $("#mimeToInclude").on("change paste", function() {
+        var keywords = $(this).val().trim();
+        current_browser.runtime.getBackgroundPage(function(backgroundPage) {
+            backgroundPage.updateIncludeMIMEs(keywords);
         });
     });
 });

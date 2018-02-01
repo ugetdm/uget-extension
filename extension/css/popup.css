@@ -49,11 +49,27 @@ body {
     align-items: center;
 }
 
+p {
+    width: 100%;
+    text-align: center;
+    border-bottom: 1px solid #696969;
+    line-height: 0.1em;
+    margin: 20px 0 20px;
+    font-size: 11pt;
+    font-weight: bold;
+    color: #696969;
+}
+
+p span {
+    background: #fff;
+    padding: 0 10px;
+}
+
 #title {
     display: table-cell;
     vertical-align: middle;
     font-weight: bold;
-    font-size: 11pt;
+    font-size: 14pt;
     padding-left: 5px;
     color: #474747;
 }
@@ -93,6 +109,11 @@ hr {
 
 .row {
     margin-bottom: 10px;
+}
+
+.subtitle {
+    margin-top: 5px;
+    margin-bottom: 0px;
 }
 
 .form-control {

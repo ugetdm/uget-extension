@@ -57,16 +57,49 @@
                 <input class="form-control" type="number" min="-1" title="Minimum file size (in KB) required to interrupt the download" type="text" id="fileSize" name="fileSize" />
             </div>
         </div>
-        <div class="row">
-            <div class="col-5 vcenter">Always interrupt</div>
-            <div class="col-7 vcenter">
-                <input class="form-control" title="Separate values by comma (Eg: github.com, .jpg)" type="text" id="keywordsToInclude" name="keywordsToInclude" placeholder="mp4, mp3" />
+        <div class="row subtitle">
+            <div class="col-12 vcenter">
+                <p><span title="If server does not provide Content-Type, uGet will interrupt the file based on minimum file size to interrupt.">Interrupt or skip files regardless of their size</span></p>
             </div>
         </div>
         <div class="row">
-            <div class="col-5 vcenter">Never interrupt</div>
-            <div class="col-7 vcenter">
-                <input class="form-control" title="Separate values by comma (Eg: github.com, .jpg)" type="text" id="keywordsToExclude" name="keywordsToExclude" placeholder="jpg, bmp, gif, github.com" />
+            <div class="col-12">
+
+                <div class="row">
+                    <div class="col-5 vcenter">Always interrupt</div>
+                    <div class="col-7 vcenter">
+                        <input class="form-control" title="Interrupt files with these MIME types" type="text" id="mimeToInclude" name="mimeToInclude" placeholder="mp4, flv, gzip" />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-5 vcenter">Never interrupt</div>
+                    <div class="col-7 vcenter">
+                        <input class="form-control" title="Skip files with these MIME types" type="text" id="mimeToExclude" name="mimeToExclude" placeholder="jpeg, png, pdf" />
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row subtitle">
+            <div class="col-12 vcenter">
+                <p><span title="This feature checks for URLs containing the keywords. Therefore you can use .fileExtension to interrupt/skip URLs containing file name. Eg: (.pdf, .jpg)">Interrupt or skip URLs regardless of file size</span></p>
+            </div>
+        </div>
+        <div class="row pane">
+            <div class="col-12">
+
+                <div class="row">
+                    <div class="col-5 vcenter">Always interrupt</div>
+                    <div class="col-7 vcenter">
+                        <input class="form-control" title="Interrupt URLs having these keywords" type="text" id="urlsToInclude" name="urlsToInclude" placeholder="ugetdm, github.com" />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-5 vcenter">Never interrupt</div>
+                    <div class="col-7 vcenter">
+                        <input class="form-control" title="Skip URLs having these keywords" type="text" id="urlsToExclude" name="urlsToExclude" placeholder="localhost, creately.com" />
+                    </div>
+                </div>
+
             </div>
         </div>
         <row>
