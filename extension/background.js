@@ -19,7 +19,7 @@
  */
 
 var EXTENSION_VERSION = "2.1.1";
-var REQUIRED_INTEGRATOR_VERSION = "2.0.7";
+var REQUIRED_INTEGRATOR_VERSION = "1.0.0";
 var interruptDownloads = true;
 var ugetIntegratorNotFound = true;
 var disposition = '';
