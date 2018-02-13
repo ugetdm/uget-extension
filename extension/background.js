@@ -257,7 +257,6 @@ function setDownloadHooks() {
         if (isBlackListedURL(url) || isBlackListedContent(mime)) {
             return;
         }
-        console.log(downloadItem);
         // Cancel the download
         current_browser.downloads.cancel(downloadItem.id);
         // Erase the download from list
@@ -396,7 +395,6 @@ function setDownloadHooks() {
             if (details.method != "POST") {
                 message.PostData = '';
             }
-            console.log(details);
             current_browser.cookies.getAll({ 'url': extractRootURL(message.URL) }, parseCookies);
             var scheme = /^https/.test(details.url) ? 'https' : 'http';
             if (chromeVersion >= 35 || firefoxVersion >= 51) {
@@ -604,7 +602,11 @@ function parseCookies(cookies_arr) {
  * Is called from the popup.js.
  */
 function updateExcludeKeywords(exclude) {
-    urlsToSkip = exclude.split(/[\s,]+/);
+    if (exclude === "") {
+        urlsToSkip = [];
+    } else {
+        urlsToSkip = exclude.split(/[\s,]+/);
+    }
     current_browser.storage.sync.set({ "uget-urls-exclude": exclude });
 }
 
@@ -613,7 +615,11 @@ function updateExcludeKeywords(exclude) {
  * Is called from the popup.js.
  */
 function updateIncludeKeywords(include) {
-    urlsToInterrupt = include.split(/[\s,]+/);
+    if (include === "") {
+        urlsToInterrupt = [];
+    } else {
+        urlsToInterrupt = include.split(/[\s,]+/);
+    }
     current_browser.storage.sync.set({ "uget-urls-include": include });
 }
 
@@ -622,7 +628,11 @@ function updateIncludeKeywords(include) {
  * Is called from the popup.js.
  */
 function updateExcludeMIMEs(exclude) {
-    mimeToSkip = exclude.split(/[\s,]+/);
+    if (exclude === "") {
+        mimeToSkip = [];
+    } else {
+        mimeToSkip = exclude.split(/[\s,]+/);
+    }
     current_browser.storage.sync.set({ "uget-mime-exclude": exclude });
 }
 
@@ -631,7 +641,11 @@ function updateExcludeMIMEs(exclude) {
  * Is called from the popup.js.
  */
 function updateIncludeMIMEs(include) {
-    mimeToInterrupt = include.split(/[\s,]+/);
+    if (include === "") {
+        mimeToInterrupt = [];
+    } else {
+        mimeToInterrupt = include.split(/[\s,]+/);
+    }
     current_browser.storage.sync.set({ "uget-mime-include": include });
 }
 
@@ -669,7 +683,6 @@ function isBlackListedURL(url) {
  * Check whether not to interrupt the given url.
  */
 function isBlackListedContent(contentType) {
-    console.log('Black listed: ' + contentType);
     blackListed = false;
     // Test the content type
     if (contentType) {
@@ -684,7 +697,6 @@ function isBlackListedContent(contentType) {
             }
         }
     }
-    console.log(blackListed);
     return blackListed;
 }
 
