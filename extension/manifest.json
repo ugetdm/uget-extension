@@ -47,7 +47,8 @@
         "downloads",
         "storage",
         "cookies",
-        "activeTab"
+        "activeTab",
+        "tabs"
     ],
     "version": "2.1.1"
 }
