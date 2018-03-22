@@ -1,45 +1,35 @@
 # uGet Extension
 
-Integrate the uGet Download Manager with Google Chrome, Chromium, Vivaldi, Opera and Mozilla Firefox.
+Integrate uGet Download Manager with Google Chrome, Chromium, Opera, Vivaldi and Mozilla Firefox.
 
-## How to install
+## Features
 
-1. Install the latest version of [uGet Download Manager](http://ugetdm.com/)
-    * Windows users: Install uGet using [Windows installer](https://github.com/ugetdm/uget-windows-installer/releases)
-2. Install the latest version of [uget-integrator](https://github.com/ugetdm/uget-integrator)
-3. Install the `uGet Integration` extension.
-    - Google Chrome, Chromium and Vivaldi: [Chrome Extension](https://chrome.google.com/webstore/detail/uget-integration/efjgjleilhflffpbnkaofpmdnajdpepi)
-    - Opera: [Opera Addon](https://addons.opera.com/en/extensions/details/uget-integration)
-    - Mozilla Firefox 56+: [Firefox Addon](https://addons.mozilla.org/en-US/firefox/addon/ugetintegration/)
+> Click on each link to see GIF animation explaining how to use these features.
 
-## How to use
+- [Browser Integration](https://github.com/ugetdm/uget-integrator/wiki/Features#browser-integration)
+- [Skip uGet](https://github.com/ugetdm/uget-integrator/wiki/Features#skip-uget)
+- [Download Youtube Videos](https://github.com/ugetdm/uget-integrator/wiki/Features#download-youtube-videos)
+- [Filter URLs](https://github.com/ugetdm/uget-integrator/wiki/Features#filter-urls)
+- [Batch Download](https://github.com/ugetdm/uget-integrator/wiki/Features#batch-download)
+- [Download Videos (Experimental)](https://github.com/ugetdm/uget-integrator/wiki/Features#download-videos-experimental)
 
-Just click on any downloadable links to download the file. 'uGet new Download' dialog will appear and continue the download. You can also right click on a link and select `Download with uGet`.
+## Installation
 
-To download all links, right click on the web page and select `Download all links with uGet`. In Youtube, you will get an additional menu item `Download media with uGet` to download video.
+> If you already have `uget-chrome-wrapper`, please uninstall it. Complete uninstallation guide is available at: [Remove Uget Chrome Wrapper](https://github.com/ugetdm/uget-integrator/wiki/Remove-Uget-Chrome-Wrapper)
 
-Use <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>U</kbd> to toggle interruption.
+1. Install `uget-integrator`
+    - [Arch Linux](https://github.com/ugetdm/uget-integrator/wiki/Installation#arch)
+    - [Ubuntu & Linux Mint](https://github.com/ugetdm/uget-integrator/wiki/Installation#ubuntu--linux-mint)
+    - [Other Linux](https://github.com/ugetdm/uget-integrator/wiki/Installation#other-linux)
+    - [Windows (Recommended method)](https://github.com/ugetdm/uget-integrator/wiki/Installation#recommended-method)
+    - [Windows (Portable method)](https://github.com/ugetdm/uget-integrator/wiki/Installation#portable-method)
 
-### Extension status signals
-
-uGet Integration extension requires [uget-integrator](https://github.com/ugetdm/uget-integrator) to integrate [uGet Download Manager](http://ugetdm.com/) with your browser. The extension indicates any connection issues using the following signals.
-
- - Green icon (<img src="https://github.com/ugetdm/uget-extension/raw/master/extension/icon_32.png" width="16px">) with a message: `Found uGet and uget-integrator` means everything works as intended
- - Grey icon (<img src="https://github.com/ugetdm/uget-extension/raw/master/extension/icon_disabled_32.png" width="16px">) with a message: `Found uGet and uget-integrator` means everything works as intended but for the moment uGet Extension is disabled. You can enable it either using the switch in the popup dialog of the extension or using <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>U</kbd> shortcut
- - Yellow icon (<img src="https://github.com/ugetdm/uget-extension/raw/master/extension/icon_warning_32.png" width="16px">) with a message: Please upgrade uget-integrator to the latest version` means the version of [uget-integrator](https://github.com/ugetdm/uget-integrator) does not match with the expected version. You can fix it by installing the latest `uget-integrator`
- - Red icon (<img src="https://github.com/ugetdm/uget-extension/raw/master/extension/icon_error_32.png" width="16px">) with a message: `Unable to connect with uget-integrator` means either you have not installed [uGet Download Manager](http://ugetdm.com/) and/or [uget-integrator](https://github.com/ugetdm/uget-integrator) or the `uget-integrator` is not detected by the extension. In the later scenario, please check the known issues and if you could not solve the problem, please open a new [issue](https://github.com/ugetdm/uget-extension/issues)
+2. Install [uget-extension](https://github.com/ugetdm/uget-extension) and restart your browser
 
 ## Known Issues
 
-### Firefox not interrupting downloads (Issue [#43](https://github.com/slgobinath/uget-chrome-wrapper/issues/43))
+- [Firefox not interrupting downloads](https://github.com/ugetdm/uget-integrator/wiki/Known-Issues#firefox-not-interrupting-downloads)
 
-If Firefox does not interrupt the downloads but `Download with uGet` works, delete the `handlers.json` from the following path.
-
-```
-~/.mozilla/firefox/mwad0hks.default/handlers.json
-```
-
-You may have a different folder name instead of `mwad0hks.default`. Firefox Nightly users may have `firefox-trunk` folder instead of `firefox`.
 
 ## License
 
