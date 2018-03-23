@@ -357,8 +357,13 @@ function setDownloadHooks() {
             } else if (details.responseHeaders[i].name.toLowerCase() == 'content-disposition') {
                 disposition = details.responseHeaders[i].value;
                 if (disposition.lastIndexOf('filename') != -1) {
-                    message.FileName = disposition.match(/filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/)[1];
-                    message.FileName = unescape(message.FileName).replace(/\"/g, "");
+                    var found = disposition.match(/filename[^;=\n]*\*=UTF-8''((['"]).*?\2|[^;\n]*)/);
+                    if(found) {
+                        message.FileName = decodeURI(found[1]);
+                    } else {
+                        message.FileName = disposition.match(/filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/)[1];
+                        message.FileName = unescape(message.FileName).replace(/\"/g, "");
+                    }
                     interruptDownload = true;
                 }
             } else if (details.responseHeaders[i].name.toLowerCase() == 'content-type') {
