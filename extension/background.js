@@ -18,7 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-var EXTENSION_VERSION = "2.1.2";
+var EXTENSION_VERSION = "2.1.3";
 var REQUIRED_INTEGRATOR_VERSION = "1.0.0";
 var interruptDownloads = true;
 var ugetIntegratorNotFound = true;
