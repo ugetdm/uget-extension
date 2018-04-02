@@ -20,6 +20,7 @@
 
 var EXTENSION_VERSION = "2.1.3";
 var REQUIRED_INTEGRATOR_VERSION = "1.0.0";
+var MAX_FILE_SIZE = Number.MAX_SAFE_INTEGER;
 var interruptDownloads = true;
 var ugetIntegratorNotFound = true;
 var disposition = '';
@@ -83,7 +84,7 @@ function initialize() {
         current_browser = browser;
         hostName = 'com.ugetdm.firefox';
         current_browser.runtime.getBrowserInfo().then(
-            function(info) {
+            function (info) {
                 if (info.name === 'Firefox') {
                     // Convert version string to int
                     firefoxVersion = parseInt(info.version.replace(/[ab]\d+/, '').split('.')[0]);
@@ -96,7 +97,7 @@ function initialize() {
         hostName = 'com.ugetdm.chrome';
     }
     // Set keyboard shortcut listener
-    current_browser.commands.onCommand.addListener(function(command) {
+    current_browser.commands.onCommand.addListener(function (command) {
         if ("toggle-interruption" === command) {
             // Toggle
             setInterruptDownload(!interruptDownloads, true);
@@ -112,7 +113,7 @@ function initialize() {
  * If no preferences found, initialize with default values.
  */
 function readStorage() {
-    current_browser.storage.sync.get(function(items) {
+    current_browser.storage.sync.get(function (items) {
         // Read the storage for excluded keywords
         if (items["uget-urls-exclude"]) {
             urlsToSkip = items["uget-urls-exclude"].split(/[\s,]+/);
@@ -181,7 +182,7 @@ function createContextMenus() {
         contexts: ['page']
     });
 
-    current_browser.contextMenus.onClicked.addListener(function(info, tab) {
+    current_browser.contextMenus.onClicked.addListener(function (info, tab) {
         "use strict";
         var page_url = info.pageUrl;
         if (info.menuItemId === "download_with_uget") {
@@ -189,7 +190,7 @@ function createContextMenus() {
             message.Referer = page_url;
             current_browser.cookies.getAll({ 'url': extractRootURL(page_url) }, parseCookies);
         } else if (info.menuItemId === "download_all_links_with_uget") {
-            current_browser.tabs.executeScript(null, { file: 'extract.js' }, function(results) {
+            current_browser.tabs.executeScript(null, { file: 'extract.js' }, function (results) {
                 // Do nothing
                 if (results[0].success) {
                     message.URL = results[0].urls;
@@ -232,7 +233,7 @@ function createContextMenus() {
  */
 function setDownloadHooks() {
     // Interrupt downloads on creation
-    current_browser.downloads.onCreated.addListener(function(downloadItem) {
+    current_browser.downloads.onCreated.addListener(function (downloadItem) {
 
         if (ugetIntegratorNotFound || !interruptDownloads) { // uget-integrator not installed
             return;
@@ -251,19 +252,30 @@ function setDownloadHooks() {
         } else {
             url = downloadItem['url'];
         }
-        if (fileSize < minFileSizeToInterrupt && !(isWhiteListedURL(url) || isWhiteListedContent(mime))) {
-            return;
-        }
+        // Do not interrupt blacklisted items
         if (isBlackListedURL(url) || isBlackListedContent(mime)) {
             return;
         }
+        // Always interrupt whitelisted items
+        if (isWhiteListedURL(url) || isWhiteListedContent(mime)) {
+            fileSize = MAX_FILE_SIZE;
+        }
+
+        if (fileSize === -1 && hostName === 'com.ugetdm.firefox') {
+            // firefox always returns -1
+            fileSize = getFileSize(url);
+        }
+
+        if (fileSize < minFileSizeToInterrupt) {
+            return;
+        }
+
         // Cancel the download
         current_browser.downloads.cancel(downloadItem.id);
         // Erase the download from list
         current_browser.downloads.erase({
             id: downloadItem.id
         });
-
         message.URL = url;
         message.FileName = unescape(downloadItem['filename']).replace(/\"/g, "");
         message.fileSize = fileSize;
@@ -271,7 +283,7 @@ function setDownloadHooks() {
         current_browser.cookies.getAll({ 'url': extractRootURL(url) }, parseCookies);
     });
 
-    current_browser.webRequest.onBeforeRequest.addListener(function(details) {
+    current_browser.webRequest.onBeforeRequest.addListener(function (details) {
         if (details.method === 'POST') {
             message.PostData = postParams(details.requestBody.formData);
         }
@@ -279,18 +291,18 @@ function setDownloadHooks() {
             requestHeaders: details.requestHeaders
         };
     }, {
-        urls: [
-            '<all_urls>'
-        ],
-        types: [
-            'main_frame',
-            'sub_frame'
-        ]
-    }, [
-        'blocking',
-        'requestBody'
-    ]);
-    current_browser.webRequest.onBeforeSendHeaders.addListener(function(details) {
+            urls: [
+                '<all_urls>'
+            ],
+            types: [
+                'main_frame',
+                'sub_frame'
+            ]
+        }, [
+            'blocking',
+            'requestBody'
+        ]);
+    current_browser.webRequest.onBeforeSendHeaders.addListener(function (details) {
         currRequest++;
         if (currRequest > 2)
             currRequest = 2;
@@ -308,19 +320,19 @@ function setDownloadHooks() {
             requestHeaders: details.requestHeaders
         };
     }, {
-        urls: [
-            '<all_urls>'
-        ],
-        types: [
-            'main_frame',
-            'sub_frame',
-            'xmlhttprequest'
-        ]
-    }, [
-        'blocking',
-        'requestHeaders'
-    ]);
-    current_browser.webRequest.onHeadersReceived.addListener(function(details) {
+            urls: [
+                '<all_urls>'
+            ],
+            types: [
+                'main_frame',
+                'sub_frame',
+                'xmlhttprequest'
+            ]
+        }, [
+            'blocking',
+            'requestHeaders'
+        ]);
+    current_browser.webRequest.onHeadersReceived.addListener(function (details) {
 
 
         if (ugetIntegratorNotFound) { // uget-integrator not installed
@@ -410,7 +422,7 @@ function setDownloadHooks() {
                 current_browser.tabs.update(details.tabId, {
                     url: "javascript:"
                 });
-                var responseHeaders = details.responseHeaders.filter(function(header) {
+                var responseHeaders = details.responseHeaders.filter(function (header) {
                     var name = header.name.toLowerCase();
                     return name !== 'content-type' &&
                         name !== 'x-content-type-options' &&
@@ -436,17 +448,17 @@ function setDownloadHooks() {
             responseHeaders: details.responseHeaders
         };
     }, {
-        urls: [
-            '<all_urls>'
-        ],
-        types: [
-            'main_frame',
-            'sub_frame'
-        ]
-    }, [
-        'responseHeaders',
-        'blocking'
-    ]);
+            urls: [
+                '<all_urls>'
+            ],
+            types: [
+                'main_frame',
+                'sub_frame'
+            ]
+        }, [
+            'responseHeaders',
+            'blocking'
+        ]);
 }
 
 /**
@@ -454,7 +466,7 @@ function setDownloadHooks() {
  * @param {*int} tabId 
  */
 function checkForYoutube(tabId, disableIfNot) {
-    current_browser.tabs.get(tabId, function(tab) {
+    current_browser.tabs.get(tabId, function (tab) {
         isYoutube = tab['url'] && tab['url'].includes('/www.youtube.com/watch?v=')
         if (isYoutube) {
             current_browser.contextMenus.update("download_media_with_uget", { enabled: true });
@@ -468,7 +480,7 @@ function checkForYoutube(tabId, disableIfNot) {
  * Grab videos and add them to mediasInTab.
  */
 function enableVideoGrabber() {
-    current_browser.tabs.onActivated.addListener(function(activeInfo) {
+    current_browser.tabs.onActivated.addListener(function (activeInfo) {
         if (mediasInTab[activeInfo['tabId']] != undefined) {
             // Media already detected
             current_browser.contextMenus.update("download_media_with_uget", { enabled: true });
@@ -478,13 +490,13 @@ function enableVideoGrabber() {
         }
     });
 
-    current_browser.tabs.onRemoved.addListener(function(tabId, removeInfo) {
+    current_browser.tabs.onRemoved.addListener(function (tabId, removeInfo) {
         if (mediasInTab[tabId]) {
             delete mediasInTab[tabId];
         }
     });
 
-    current_browser.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
+    current_browser.tabs.onUpdated.addListener(function (tabId, changeInfo, tab) {
         if (changeInfo['status'] === 'loading') {
             // Loading a new page
             delete mediasInTab[tabId];
@@ -493,7 +505,7 @@ function enableVideoGrabber() {
         checkForYoutube(tabId, false);
     });
 
-    current_browser.webRequest.onResponseStarted.addListener(function(details) {
+    current_browser.webRequest.onResponseStarted.addListener(function (details) {
         content_url = details['url'];
         type = details['type'];
         if (type === 'media' || content_url.includes('mp4')) {
@@ -507,14 +519,14 @@ function enableVideoGrabber() {
             current_browser.contextMenus.update("download_media_with_uget", { enabled: true });
         }
     }, {
-        urls: [
-            '<all_urls>'
-        ],
-        types: [
-            'media',
-            'object'
-        ]
-    });
+            urls: [
+                '<all_urls>'
+            ],
+            types: [
+                'media',
+                'object'
+            ]
+        });
 }
 
 ////////////////// Utility Functions //////////////////
@@ -522,7 +534,7 @@ function enableVideoGrabber() {
  * Send message to uget-integrator
  */
 function sendMessageToHost(message) {
-    current_browser.runtime.sendNativeMessage(hostName, message, function(response) {
+    current_browser.runtime.sendNativeMessage(hostName, message, function (response) {
         clearMessage();
         ugetIntegratorNotFound = (response == null);
         if (!ugetIntegratorNotFound && !ugetIntegratorVersion) {
@@ -568,6 +580,28 @@ function postParams(source) {
         array.push(encodeURIComponent(key) + '=' + encodeURIComponent(source[key]));
     }
     return array.join('&');
+}
+
+/**
+ * Get the fileSize of given URL.
+ * @param {string} url 
+ */
+function getFileSize(url) {
+    var fileSize = -1;
+    try {
+        var http = new XMLHttpRequest();
+        http.open('HEAD', url, false);
+        http.send(null);
+        if (http.status === 200) {
+            fileSize = http.getResponseHeader('content-length');
+            if (fileSize) {
+                fileSize = parseInt(fileSize);
+            }
+        }
+    } catch (err) {
+        fileSize = -1;
+    }
+    return fileSize;
 }
 
 /**
