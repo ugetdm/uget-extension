@@ -33,6 +33,9 @@ Integrate uGet Download Manager with Google Chrome, Chromium, Opera, Vivaldi and
 
 - [Firefox not interrupting downloads](https://github.com/ugetdm/uget-integrator/wiki/Known-Issues#firefox-not-interrupting-downloads)
 
+## Issues
+
+In order to prevent having the same issue reported on both uget-extension and uget-integration, this repository does not permit reporting issues anymore. Please report your issues at [uget-integrator repository](https://github.com/ugetdm/uget-integrator/issues)
 
 ## License
 
