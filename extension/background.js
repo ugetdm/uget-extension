@@ -103,6 +103,8 @@ function initialize() {
             setInterruptDownload(!interruptDownloads, true);
         }
     });
+    // Set internal popup.js message listener
+    current_browser.runtime.onMessage.addListener(handleInternalMessage);
     chromeVersion = parseInt(chromeVersion);
     sendMessageToHost(message);
     createContextMenus();
@@ -638,7 +640,7 @@ function parseCookies(cookies_arr) {
 
 /**
  * Update the exclude keywords.
- * Is called from the popup.js.
+ * Is triggered by the popup.js message handler.
  */
 function updateExcludeKeywords(exclude) {
     if (exclude === "") {
@@ -651,7 +653,7 @@ function updateExcludeKeywords(exclude) {
 
 /**
  * Update the include keywords.
- * Is called from the popup.js.
+ * Is triggered by the popup.js message handler.
  */
 function updateIncludeKeywords(include) {
     if (include === "") {
@@ -664,7 +666,7 @@ function updateIncludeKeywords(include) {
 
 /**
  * Update the exclude MIMEs.
- * Is called from the popup.js.
+ * Is triggered by the popup.js message handler.
  */
 function updateExcludeMIMEs(exclude) {
     if (exclude === "") {
@@ -677,7 +679,7 @@ function updateExcludeMIMEs(exclude) {
 
 /**
  * Update the include MIMEs.
- * Is called from the popup.js.
+ * Is triggered by the popup.js message handler.
  */
 function updateIncludeMIMEs(include) {
     if (include === "") {
@@ -690,11 +692,46 @@ function updateIncludeMIMEs(include) {
 
 /**
  * Update the minimum file size to interrupt.
- * Is called from the popup.js.
+ * Is triggered by the popup.js message handler.
  */
 function updateMinFileSize(size) {
     minFileSizeToInterrupt = size;
     current_browser.storage.sync.set({ "uget-min-file-size": size });
+}
+
+/**
+ * Handle messages within the extension.
+ * Is triggered by a popup.js message.
+ */
+function handleInternalMessage(message, sender, sendResponse) {
+    if (message.hasOwnProperty("get")) {
+        switch (message.get) {
+            case "state":
+                sendResponse({data: getState()});
+                break;
+        }
+    } else if (message.hasOwnProperty("update")) {
+        switch (message.update) {
+            case "interruptDownload":
+                setInterruptDownload(message.data, true);
+                break;
+            case "minFileSize":
+                updateMinFileSize(message.data);
+                break;
+            case "excludeKeywords":
+                updateExcludeKeywords(message.data);
+                break;
+            case "includeKeywords":
+                updateIncludeKeywords(message.data);
+                break;
+            case "excludeMIMEs":
+                updateExcludeMIMEs(message.data);
+                break;
+            case "includeMIMEs":
+                updateIncludeMIMEs(message.data);
+                break;
+        }
+    }
 }
 
 /**
