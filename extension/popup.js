@@ -20,6 +20,10 @@
 
 var current_browser;
 
+function sendMessageCallbabackToPromise(message, responseCallback) {
+    browser.runtime.sendMessage(message).then(responseCallback);
+}
+
 try {
     current_browser = browser;
     current_browser.runtime.getBrowserInfo().then(
@@ -29,14 +33,16 @@ try {
             }
         }
     );
+    compatSendMessage = sendMessageCallbabackToPromise;
 } catch (ex) {
     // Not Firefox
     current_browser = chrome;
+    compatSendMessage = current_browser.runtime.sendMessage
 }
 
 $(document).ready(function() {
     // Show the system status
-    current_browser.runtime.sendMessage({get: "state"}).then(function(response) {
+    compatSendMessage({get: "state"}, function(response) {
         var state = response.data;
         if (state == 0) {
             $('#info').css('display', 'block');
@@ -65,7 +71,7 @@ $(document).ready(function() {
     // Set event listeners
     $('#chk_enable').change(function() {
         var enabled = this.checked;
-        current_browser.runtime.sendMessage(
+        compatSendMessage(
             {update: "interruptDownload", data: enabled}
         );
     });
@@ -77,31 +83,31 @@ $(document).ready(function() {
             minFileSize = -1;
         }
         $('#fileSize').val(minFileSize);
-        current_browser.runtime.sendMessage(
+        compatSendMessage(
             {update: "minFileSize", data: minFileSize * 1024}
         );
     });
     $("#urlsToExclude").on("change paste", function() {
         var keywords = $(this).val().trim();
-        current_browser.runtime.sendMessage(
+        compatSendMessage(
             {update: "excludeKeywords", data: keywords}
         );
     });
     $("#urlsToInclude").on("change paste", function() {
         var keywords = $(this).val().trim();
-        current_browser.runtime.sendMessage(
+        compatSendMessage(
             {update: "includeKeywords", data: keywords}
         );
     });
     $("#mimeToExclude").on("change paste", function() {
         var keywords = $(this).val().trim();
-        current_browser.runtime.sendMessage(
+        compatSendMessage(
             {update: "excludeMIMEs", data: keywords}
         );
     });
     $("#mimeToInclude").on("change paste", function() {
         var keywords = $(this).val().trim();
-        current_browser.runtime.sendMessage(
+        compatSendMessage(
             {update: "includeMIMEs", data: keywords}
         );
     });
