@@ -20,6 +20,10 @@
 
 var current_browser;
 
+function sendMessageCallbabackToPromise(message, responseCallback) {
+    browser.runtime.sendMessage(message).then(responseCallback);
+}
+
 try {
     current_browser = browser;
     current_browser.runtime.getBrowserInfo().then(
@@ -29,15 +33,17 @@ try {
             }
         }
     );
+    compatSendMessage = sendMessageCallbabackToPromise;
 } catch (ex) {
     // Not Firefox
     current_browser = chrome;
+    compatSendMessage = current_browser.runtime.sendMessage
 }
 
 $(document).ready(function() {
     // Show the system status
-    current_browser.runtime.getBackgroundPage(function(backgroundPage) {
-        var state = backgroundPage.getState();
+    compatSendMessage({get: "state"}, function(response) {
+        var state = response.data;
         if (state == 0) {
             $('#info').css('display', 'block');
             $('#warn').css('display', 'none');
@@ -65,9 +71,9 @@ $(document).ready(function() {
     // Set event listeners
     $('#chk_enable').change(function() {
         var enabled = this.checked;
-        current_browser.runtime.getBackgroundPage(function(backgroundPage) {
-            backgroundPage.setInterruptDownload(enabled, true);
-        });
+        compatSendMessage(
+            {update: "interruptDownload", data: enabled}
+        );
     });
     $("#fileSize").on("change paste", function() {
         var minFileSize = parseInt($(this).val());
@@ -77,32 +83,32 @@ $(document).ready(function() {
             minFileSize = -1;
         }
         $('#fileSize').val(minFileSize);
-        current_browser.runtime.getBackgroundPage(function(backgroundPage) {
-            backgroundPage.updateMinFileSize(minFileSize * 1024);
-        });
+        compatSendMessage(
+            {update: "minFileSize", data: minFileSize * 1024}
+        );
     });
     $("#urlsToExclude").on("change paste", function() {
         var keywords = $(this).val().trim();
-        current_browser.runtime.getBackgroundPage(function(backgroundPage) {
-            backgroundPage.updateExcludeKeywords(keywords);
-        });
+        compatSendMessage(
+            {update: "excludeKeywords", data: keywords}
+        );
     });
     $("#urlsToInclude").on("change paste", function() {
         var keywords = $(this).val().trim();
-        current_browser.runtime.getBackgroundPage(function(backgroundPage) {
-            backgroundPage.updateIncludeKeywords(keywords);
-        });
+        compatSendMessage(
+            {update: "includeKeywords", data: keywords}
+        );
     });
     $("#mimeToExclude").on("change paste", function() {
         var keywords = $(this).val().trim();
-        current_browser.runtime.getBackgroundPage(function(backgroundPage) {
-            backgroundPage.updateExcludeMIMEs(keywords);
-        });
+        compatSendMessage(
+            {update: "excludeMIMEs", data: keywords}
+        );
     });
     $("#mimeToInclude").on("change paste", function() {
         var keywords = $(this).val().trim();
-        current_browser.runtime.getBackgroundPage(function(backgroundPage) {
-            backgroundPage.updateIncludeMIMEs(keywords);
-        });
+        compatSendMessage(
+            {update: "includeMIMEs", data: keywords}
+        );
     });
 });
