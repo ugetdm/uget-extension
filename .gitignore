@@ -95,3 +95,10 @@ ENV/
 
 # Visual Studio Code settings
 .vscode/
+
+# NPM packages
+node_modules/
+
+# Artifacts
+*.zip
+*.xpi
