@@ -1,0 +1,9 @@
+{
+  "scripts": {
+    "package": "cd extension && zip -r -FS uget.zip * && mv uget.zip ..",
+    "sign": "node ./sign-addon.js"
+  },
+  "devDependencies": {
+    "sign-addon": "^3.5.0"
+  }
+}

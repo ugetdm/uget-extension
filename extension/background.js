@@ -243,8 +243,12 @@ function setDownloadHooks() {
             return;
         }
 
+        var fileName = downloadItem['filename'];
         var fileSize = downloadItem['fileSize'];
         var mime = downloadItem['mime'];
+        if (mime === null) {
+            mime = fileName.split('.').pop();
+        }
 
         var url = '';
         if (chromeVersion >= 54) {
@@ -277,7 +281,7 @@ function setDownloadHooks() {
             id: downloadItem.id
         });
         message.URL = url;
-        message.FileName = unescape(downloadItem['filename']).replace(/\"/g, "");
+        message.FileName = unescape(fileName).replace(/\"/g, "");
         message.fileSize = fileSize;
         message.Referer = downloadItem['referrer'];
         current_browser.cookies.getAll({ 'url': extractRootURL(url) }, parseCookies);
